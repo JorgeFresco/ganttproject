@@ -30,6 +30,8 @@ import javax.swing.*;
 public class ResourceActionSet {
   private final ResourceNewAction myResourceNewAction;
 
+  private final ResourceNewRecurringAction myResourceNewRecurringAction;
+
   private final ResourceDeleteAction myResourceDeleteAction;
 
   private final ResourcePropertiesAction myResourcePropertiesAction;
@@ -48,6 +50,8 @@ public class ResourceActionSet {
       GanttProject projectFrame, UIFacade uiFacade, ResourceTreeTable table) {
     HumanResourceManager manager = projectFrame.getHumanResourceManager();
     myResourceNewAction = new ResourceNewAction(manager, projectFrame.getRoleManager(), uiFacade);
+    myResourceNewRecurringAction = new ResourceNewRecurringAction(manager, projectFrame.getRoleManager(), uiFacade);
+
     myResourceDeleteAction = new ResourceDeleteAction(manager, resourceContext, projectFrame, uiFacade);
     myResourcePropertiesAction = new ResourcePropertiesAction(projectFrame, resourceContext, uiFacade);
     myResourceMoveUpAction = new ResourceMoveUpAction(table);
@@ -68,6 +72,10 @@ public class ResourceActionSet {
 
   public ResourceNewAction getResourceNewAction() {
     return myResourceNewAction;
+  }
+
+  public ResourceNewRecurringAction getResourceNewRecurringAction() {
+    return myResourceNewRecurringAction;
   }
 
   public ResourceDeleteAction getResourceDeleteAction() {

@@ -66,6 +66,7 @@ public abstract class TreeTableContainer<ModelObject, TreeTableClass extends GPT
   private final TreeTableClass myTreeTable;
   private final TreeTableModelClass myTreeTableModel;
   private GPAction myNewAction;
+  private GPAction myNewRecurringAction;
   private GPAction myPropertiesAction;
   private GPAction myDeleteAction;
 
@@ -340,8 +341,14 @@ public abstract class TreeTableContainer<ModelObject, TreeTableClass extends GPT
     return myDeleteAction;
   }
 
-  void setArtefactActions(GPAction newAction, GPAction propertiesAction, GPAction deleteAction) {
+  @Override
+  public GPAction getNewRecurringAction() {
+    return myNewRecurringAction;
+  }
+
+  void setArtefactActions(GPAction newAction, GPAction NewRecurringAction,GPAction propertiesAction, GPAction deleteAction) {
     myNewAction = newAction;
+    myNewRecurringAction = NewRecurringAction;
     myPropertiesAction = propertiesAction;
     myDeleteAction = deleteAction;
     myTreeTable.setNewRowAction(myNewAction);

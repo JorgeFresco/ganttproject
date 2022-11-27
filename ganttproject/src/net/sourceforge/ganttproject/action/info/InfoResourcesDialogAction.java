@@ -74,7 +74,7 @@ public class InfoResourcesDialogAction extends GPAction {
     if (calledFromAppleScreenMenu(e)) {
       return;
     }
-    InfoResourcesDialog2 dialog = new InfoResourcesDialog2(myProject, myUiFacade, "settings.app.pageOrder");
-    dialog.show();
+    InfoResourcesDialog2 dialog = new InfoResourcesDialog2(myProject, myUiFacade, getResourcesIDs());
+    //dialog.show();
   }
 }

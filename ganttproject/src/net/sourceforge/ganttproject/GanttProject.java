@@ -41,6 +41,7 @@ import net.sourceforge.ganttproject.action.edit.EditMenu;
 import net.sourceforge.ganttproject.action.help.HelpMenu;
 
 import net.sourceforge.ganttproject.action.info.InfoMenu;
+import net.sourceforge.ganttproject.action.info.InfoResourcesMenu;
 
 import net.sourceforge.ganttproject.action.project.ProjectMenu;
 import net.sourceforge.ganttproject.action.resource.ResourceActionSet;
@@ -134,7 +135,7 @@ public class GanttProject extends GanttProjectBase implements ResourceView, Gant
 
   private final EditMenu myEditMenu;
 
-  private final InfoMenu viewInfo;
+  //private final InfoResourcesMenu viewInfo;
 
   private final ProjectMenu myProjectMenu;
 
@@ -326,8 +327,10 @@ public class GanttProject extends GanttProjectBase implements ResourceView, Gant
     myEditMenu = new EditMenu(getProject(), getUIFacade(), getViewManager(), getSearchUi(), "edit");
     bar.add(myEditMenu);
 
-    viewInfo = new InfoMenu(getProject(), getUIFacade(), getViewManager(), getSearchUi(), getHumanResourceManager(), "projectInfo");
-    bar.add(viewInfo);
+    /*viewInfo = new InfoMenu(getProject(), getUIFacade(), getViewManager(), getSearchUi(), getHumanResourceManager(), "projectInfo");
+    bar.add(viewInfo);*/
+    InfoResourcesMenu infoMenu = new InfoResourcesMenu(getProject(), getUIFacade(), getProjectUIFacade());
+    bar.add(infoMenu.createMenu());
 
     ViewMenu viewMenu = new ViewMenu(getProject(), getViewManager(), getUiFacadeImpl().getDpiOption(), getUiFacadeImpl().getChartFontOption(), "view");
     bar.add(viewMenu);

@@ -67,6 +67,9 @@ public interface UIFacade {
 
   int RESOURCES_INDEX = 1;
 
+  int INFO_INDEX = 2;
+
+
   IntegerOption getDpiOption();
   GPOption<String> getLafOption();
 

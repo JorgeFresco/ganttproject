@@ -21,9 +21,15 @@ package net.sourceforge.ganttproject.action.info;
 import net.sourceforge.ganttproject.IGanttProject;
 import net.sourceforge.ganttproject.action.GPAction;
 import net.sourceforge.ganttproject.gui.UIFacade;
-import net.sourceforge.ganttproject.gui.options.SettingsDialog2;
+import net.sourceforge.ganttproject.gui.options.InfoResourcesDialog2;
+import net.sourceforge.ganttproject.resource.HumanResourceManager;
+import net.sourceforge.ganttproject.resource.HumanResource;
 
 import java.awt.event.ActionEvent;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Action to show the options dialog for the application. It will seach and show
@@ -33,10 +39,34 @@ public class InfoResourcesDialogAction extends GPAction {
   private final UIFacade myUiFacade;
   private final IGanttProject myProject;
 
-  public InfoResourcesDialogAction(IGanttProject project, UIFacade uiFacade) {
+  private HumanResourceManager myRm;
+
+  public InfoResourcesDialogAction(IGanttProject project, UIFacade uiFacade, HumanResourceManager rm) {
     super("resourcesInfo.app");
     myUiFacade = uiFacade;
     myProject = project;
+    myRm = rm;
+  }
+
+  public String getResourcesIDs() {
+    String IDs = "";
+    int i = 0;
+    List<HumanResource> resources = myRm.getResources();
+    Iterator<HumanResource> it = resources.iterator();
+    HumanResource current;
+
+    while(it.hasNext()) {
+      current = it.next();
+      if(i == 0){
+        IDs += Integer.toString(current.getId());
+      }
+      else {
+        IDs += "," + Integer.toString(current.getId());
+      }
+      i++;
+    }
+
+    return IDs;
   }
 
   @Override
@@ -44,7 +74,7 @@ public class InfoResourcesDialogAction extends GPAction {
     if (calledFromAppleScreenMenu(e)) {
       return;
     }
-    SettingsDialog2 dialog = new SettingsDialog2(myProject, myUiFacade, "settings.app.pageOrder");
+    InfoResourcesDialog2 dialog = new InfoResourcesDialog2(myProject, myUiFacade, "settings.app.pageOrder");
     dialog.show();
   }
 }

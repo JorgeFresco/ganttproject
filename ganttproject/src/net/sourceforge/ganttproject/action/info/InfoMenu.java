@@ -28,14 +28,15 @@ import net.sourceforge.ganttproject.gui.UIFacade;
 import net.sourceforge.ganttproject.gui.view.GPViewManager;
 import net.sourceforge.ganttproject.search.SearchUi;
 import net.sourceforge.ganttproject.undo.GPUndoManager;
+import net.sourceforge.ganttproject.resource.HumanResourceManager;
 
 
 public class InfoMenu extends JMenu {
 
-  public InfoMenu(IGanttProject project, UIFacade uiFacade, GPViewManager viewManager, SearchUi searchUi, String key) {
+  public InfoMenu(IGanttProject project, UIFacade uiFacade, GPViewManager viewManager, SearchUi searchUi, HumanResourceManager rm, String key) {
     super(GPAction.createVoidAction(key));
 
-    add(new InfoResourcesDialogAction(project, uiFacade));
+    add(new InfoResourcesDialogAction(project, uiFacade, rm));
     setToolTipText(null);
   }
 

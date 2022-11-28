@@ -39,7 +39,7 @@ import net.sourceforge.ganttproject.document.ReadOnlyProxyDocument;
 import net.sourceforge.ganttproject.gui.ProjectUIFacade;
 import net.sourceforge.ganttproject.gui.UIFacade;
 import net.sourceforge.ganttproject.gui.UIUtil;
-import net.sourceforge.ganttproject.gui.about.AboutDialog2;
+import net.sourceforge.ganttproject.action.info.InfoDialog2;
 import net.sourceforge.ganttproject.language.GanttLanguage;
 
 /**
@@ -65,13 +65,13 @@ public class InfoResourcesMenu {
         private final UIFacade myUiFacade;
 
         AboutAction(UIFacade uifacade) {
-            super("about");
+            super("resourcesInfo.app");
             myUiFacade = uifacade;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            AboutDialog2 agp = new AboutDialog2(myUiFacade);
+            InfoDialog2 agp = new InfoDialog2(myUiFacade);
             agp.show();
         }
     }

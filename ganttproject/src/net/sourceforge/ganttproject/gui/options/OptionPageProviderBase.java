@@ -1,4 +1,4 @@
-/*
+  /*
 GanttProject is an opensource project management tool. License: GPL3
 Copyright (C) 2011 Dmitry Barashev
 

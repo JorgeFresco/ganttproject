@@ -24,11 +24,9 @@ import net.sourceforge.ganttproject.gui.UIFacade;
 import net.sourceforge.ganttproject.gui.UIUtil;
 import net.sourceforge.ganttproject.task.Task;
 import net.sourceforge.ganttproject.task.TaskManager;
+import net.sourceforge.ganttproject.*;
 
-
-
-import net.sourceforge.ganttproject.gui.AbstractPagesDialog;
-import net.sourceforge.ganttproject.gui.about.AboutDialog2;
+import net.sourceforge.ganttproject.gui.GanttDialogRecurringTask;
 
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -36,6 +34,9 @@ import java.util.List;
 public class TaskNewRecurringAction extends GPAction {
   private final IGanttProject myProject;
   private final UIFacade myUiFacade;
+
+  private final int nRepetitions = 0;
+  private final int interval = 0;
 
 
   public TaskNewRecurringAction(IGanttProject project, UIFacade uiFacade) {
@@ -58,10 +59,20 @@ public class TaskNewRecurringAction extends GPAction {
     if (calledFromAppleScreenMenu(e)) {
       return;
     }
-    TaskRecurringDialog agp = new TaskRecurringDialog(myUiFacade);
-    agp.show();
-  }
+    GanttDialogRecurringTask drt = new GanttDialogRecurringTask(myUiFacade, nRepetitions, interval);
+    drt.setVisible(true);
 
+    if (drt.result()) {
+      myUiFacade.getUndoManager().undoableEdit(getLocalizedDescription(), new Runnable() {
+        @Override
+        public void run() {
+          // Task newTask = getTaskManager().newTaskBuilder()
+          //        .withPrevSibling(selectedTask).withStartDate(getUIFacade().getGanttChart().getStartDate()).build();
+          // myUiFacade.getTaskTree().startDefaultEditing(newTask);
+        }
+      });
+    }
+  }
 
 
   protected TaskManager getTaskManager() {

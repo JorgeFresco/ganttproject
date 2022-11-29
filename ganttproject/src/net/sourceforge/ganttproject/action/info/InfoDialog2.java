@@ -45,22 +45,54 @@ import net.sourceforge.ganttproject.gui.NotificationManager;
 import net.sourceforge.ganttproject.gui.UIFacade;
 import net.sourceforge.ganttproject.gui.options.TopPanel;
 import net.sourceforge.ganttproject.language.GanttLanguage;
+import net.sourceforge.ganttproject.resource.HumanResourceManager;
+import net.sourceforge.ganttproject.resource.HumanResource;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class InfoDialog2 extends AbstractPagesDialog {
 
   private static final Color HTML_BACKGROUND = new JPanel().getBackground();
+  private HumanResourceManager myRm;
 
-  public InfoDialog2(UIFacade uiFacade) {
+  public InfoDialog2(UIFacade uiFacade, HumanResourceManager rm) {
     super("resourcesInfo", uiFacade, createPages());
+    myRm = rm;
+  }
+
+  private String getResourcesIDs() {
+    String IDs = "";
+    int i = 0;
+    List<HumanResource> resources = myRm.getResources();
+    Iterator<HumanResource> it = resources.iterator();
+    HumanResource current;
+
+    while(it.hasNext()) {
+      current = it.next();
+      if(i == 0){
+        IDs += Integer.toString(current.getId());
+      }
+      else {
+        IDs += "," + Integer.toString(current.getId());
+      }
+      i++;
+    }
+
+    return IDs;
   }
 
   private static List<ListItem> createPages() {
     List<ListItem> result = new ArrayList<AbstractPagesDialog.ListItem>();
-    result.add(createSummaryPage());
-    result.add(createHtmlPage("license"));
-    result.add(createHtmlPage("library"));
+    //result.add(createSummaryPage());
+    //getResourcesIDs();
+    for(int i =0; i>5 ;i++);
+    result.add(createHtmlPage(" ", "Resources", "There are no resources to display"));
+    //result.add(createHtmlPage("license"));
+    //result.add(createHtmlPage("library"));
     return result;
   }
+
 
   private static ListItem createSummaryPage() {
     JPanel result = new JPanel(new BorderLayout());

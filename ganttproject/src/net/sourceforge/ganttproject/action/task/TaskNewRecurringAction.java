@@ -30,13 +30,15 @@ import net.sourceforge.ganttproject.gui.GanttDialogRecurringTask;
 
 import java.awt.event.ActionEvent;
 import java.util.List;
+import java.util.Date;
+import java.util.Calendar;
 
 public class TaskNewRecurringAction extends GPAction {
   private final IGanttProject myProject;
   private final UIFacade myUiFacade;
 
-  private final int nRepetitions = 0;
-  private final int interval = 0;
+  private int nRepetitions = 0;
+  private int interval = 0;
 
 
   public TaskNewRecurringAction(IGanttProject project, UIFacade uiFacade) {
@@ -59,16 +61,27 @@ public class TaskNewRecurringAction extends GPAction {
     if (calledFromAppleScreenMenu(e)) {
       return;
     }
-    GanttDialogRecurringTask drt = new GanttDialogRecurringTask(myUiFacade, nRepetitions, interval);
+    final GanttDialogRecurringTask drt = new GanttDialogRecurringTask(myUiFacade, nRepetitions, interval);
     drt.setVisible(true);
 
     if (drt.result()) {
       myUiFacade.getUndoManager().undoableEdit(getLocalizedDescription(), new Runnable() {
         @Override
         public void run() {
-          // Task newTask = getTaskManager().newTaskBuilder()
-          //        .withPrevSibling(selectedTask).withStartDate(getUIFacade().getGanttChart().getStartDate()).build();
-          // myUiFacade.getTaskTree().startDefaultEditing(newTask);
+          nRepetitions = drt.getNRepetitionsField();
+          interval = drt.getIntervalField();
+          System.out.println(nRepetitions);
+          System.out.println(interval);
+          Calendar c = Calendar.getInstance();
+          for(int i = 0; i < nRepetitions; i++) {
+            Date date = new Date();
+            c.setTime(date);
+            c.add(Calendar.DATE, i*interval);
+            date = c.getTime();
+            System.out.println(date);
+            Task newTask = getTaskManager().newTaskBuilder().withStartDate(date).build();
+            myUiFacade.getTaskTree().startDefaultEditing(newTask);
+          }
         }
       });
     }

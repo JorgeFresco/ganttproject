@@ -78,6 +78,14 @@ public class GanttDialogRecurringTask {
     return change;
   }
 
+  public int getNRepetitionsField() {
+    return myRepetitionsField.getValue();
+  }
+
+  public int getIntervalField() {
+    return myIntervalField.getValue();
+  }
+
   public void setVisible(boolean isVisible) {
     if (isVisible) {
       Component contentPane = getComponent();
@@ -131,9 +139,6 @@ public class GanttDialogRecurringTask {
   }
 
   private void okButtonActionPerformed() {
-
-    nRepetitions = myRepetitionsField.getValue();
-    interval = myIntervalField.getValue();
     change = true;
   }
 

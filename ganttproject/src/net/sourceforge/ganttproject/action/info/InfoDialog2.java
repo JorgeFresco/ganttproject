@@ -59,7 +59,7 @@ public class InfoDialog2 extends AbstractPagesDialog {
 
   public InfoDialog2(UIFacade uiFacade, HumanResourceManager rm) {
 
-    super("resourcesInfo", uiFacade, createPages());
+    super("resourcesInfo", uiFacade, createPages(rm));
     myRm = rm;
   }
 
@@ -86,12 +86,32 @@ public class InfoDialog2 extends AbstractPagesDialog {
   }
 
 
-  private static List<ListItem> createPages() {
+  private static List<ListItem> createPages(HumanResourceManager rm) {
+
+    //--Resources values--\\
+    String IDs = "";
+    int i = 0;
+    List<HumanResource> resources = rm.getResources();
+    Iterator<HumanResource> it = resources.iterator();
+    HumanResource current;
+
+    while(it.hasNext()) {
+      current = it.next();
+      if(i == 0){
+        IDs += Integer.toString(current.getId());
+      }
+      else {
+        IDs += "," + Integer.toString(current.getId());
+      }
+      i++;
+    }
+    //--------------------\\
+
+
     List<ListItem> result = new ArrayList<AbstractPagesDialog.ListItem>();
     //result.add(createSummaryPage());
     //getResourcesIDs();
-    for(int i =0; i>5 ;i++);
-    result.add(createHtmlPage("1", "Resources1", "There are no resources to display"));
+    result.add(createHtmlPage("1", "Resources1", IDs));
     result.add(createHtmlPage("2", "Resources2", "There are no resources to display2"));
     result.add(createHtmlPage("3", "Resources3", "There are no resources to display3"));
     //result.add(createHtmlPage("license"));

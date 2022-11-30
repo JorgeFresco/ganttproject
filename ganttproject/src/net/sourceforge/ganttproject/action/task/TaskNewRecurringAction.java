@@ -70,17 +70,21 @@ public class TaskNewRecurringAction extends GPAction {
         public void run() {
           nRepetitions = drt.getNRepetitionsField();
           interval = drt.getIntervalField();
-          System.out.println(nRepetitions);
-          System.out.println(interval);
           Calendar c = Calendar.getInstance();
-          for(int i = 0; i < nRepetitions; i++) {
-            Date date = new Date();
+          Date date = new Date();
+          int nTasksAdded = 0;
+          int daysPassed = interval;
+          while (nTasksAdded < nRepetitions) {
+            if ((c.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) && (c.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY))
+              if (daysPassed == interval) {
+                Task newTask = getTaskManager().newTaskBuilder().withStartDate(date).build();
+                myUiFacade.getTaskTree().startDefaultEditing(newTask);
+                nTasksAdded++;
+                daysPassed = 1;
+              } else daysPassed++;
             c.setTime(date);
-            c.add(Calendar.DATE, i*interval);
+            c.add(Calendar.DATE, 1);
             date = c.getTime();
-            System.out.println(date);
-            Task newTask = getTaskManager().newTaskBuilder().withStartDate(date).build();
-            myUiFacade.getTaskTree().startDefaultEditing(newTask);
           }
         }
       });

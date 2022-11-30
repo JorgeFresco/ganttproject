@@ -64,58 +64,23 @@ public class InfoDialog2 extends AbstractPagesDialog {
   }
 
 
-  private String getResourcesIDs() {
-    String IDs = "";
-    int i = 0;
-    List<HumanResource> resources = myRm.getResources();
-    Iterator<HumanResource> it = resources.iterator();
-    HumanResource current;
-
-    while(it.hasNext()) {
-      current = it.next();
-      if(i == 0){
-        IDs += Integer.toString(current.getId());
-      }
-      else {
-        IDs += "," + Integer.toString(current.getId());
-      }
-      i++;
-    }
-
-    return IDs;
-  }
-
-
   private static List<ListItem> createPages(HumanResourceManager rm) {
 
+    List<ListItem> result = new ArrayList<AbstractPagesDialog.ListItem>();
+
     //--Resources values--\\
-    String IDs = "";
-    int i = 0;
     List<HumanResource> resources = rm.getResources();
     Iterator<HumanResource> it = resources.iterator();
     HumanResource current;
 
     while(it.hasNext()) {
       current = it.next();
-      if(i == 0){
-        IDs += Integer.toString(current.getId());
-      }
-      else {
-        IDs += "," + Integer.toString(current.getId());
-      }
-      i++;
+      String info = "Name: " + current.getName() + "<p>" + "Phone: " + current.getPhone() + "<p>" + "Mail: " + current.getMail();
+      result.add(createHtmlPage(Integer.toString(current.getId()), current.getName(), info));
     }
     //--------------------\\
 
-
-    List<ListItem> result = new ArrayList<AbstractPagesDialog.ListItem>();
-    //result.add(createSummaryPage());
-    //getResourcesIDs();
-    result.add(createHtmlPage("1", "Resources1", IDs));
-    result.add(createHtmlPage("2", "Resources2", "There are no resources to display2"));
-    result.add(createHtmlPage("3", "Resources3", "There are no resources to display3"));
-    //result.add(createHtmlPage("license"));
-    //result.add(createHtmlPage("library"));
+    //result.add(createHtmlPage("1", "Resources1", IDs));
     return result;
   }
 

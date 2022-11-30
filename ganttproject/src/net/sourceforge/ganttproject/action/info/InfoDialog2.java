@@ -58,12 +58,12 @@ public class InfoDialog2 extends AbstractPagesDialog {
 
   private static final Color HTML_BACKGROUND = new JPanel().getBackground();
 
-  private HumanResourceManager myRm;
+  //private HumanResourceManager myRm;
 
   public InfoDialog2(UIFacade uiFacade, HumanResourceManager rm) {
 
     super("resourcesInfo", uiFacade, createPages(rm));
-    myRm = rm;
+    //myRm = rm;
   }
 
 
@@ -75,69 +75,31 @@ public class InfoDialog2 extends AbstractPagesDialog {
     List<HumanResource> resources = rm.getResources();
     Iterator<HumanResource> it = resources.iterator();
     HumanResource current;
-
+    result.add(createHtmlPage(" ", "Project info", "Informação geral sobre o projeto."));
     while(it.hasNext()) {
       current = it.next();
-      ResourceAssignment[] resourceAssignemnts = current.getAssignments();
-      float workTime = 0;
-      for(int i=0; i<resourceAssignemnts.length; i++) {
-        workTime += resourceAssignemnts[i].getLoad(); //Isto só dá a percentagem por task. Precisamos de multiplicar pela duração da task
-                                                      //para dar a duração certa por recurso
-                                                      //Usar classes HumanResource, ResourceAssignemt, Task (paths nos imports)
+      ResourceAssignment[] resourceAssignments = current.getAssignments();
+      int workTime = 0;
+      int workDone = 0;
+      float a;
+      Task task;
+      for (ResourceAssignment resourceAssignment : resourceAssignments) {
+        a = resourceAssignment.getLoad();
+        task = resourceAssignment.getTask();
+        workTime += task.getDuration().getLength();
+        workDone += task.getCompletionPercentage(); // o que é o getLoad exatamente
+
+        //Isto só dá a percentagem por task. Precisamos de multiplicar pela duração da task
+        //para dar a duração certa por recurso
+        //Usar classes HumanResource, ResourceAssignment, Task (paths nos imports)
       }
-      String info = "Name: " + current.getName() + "<p>Phone: " + current.getPhone() + "<p>Mail: " + current.getMail() +
-              "<p>Test: " + Float.toString(workTime);
+      workDone /= resourceAssignments.length;
+      String info = "Name: " + current.getName() +
+              "<p>Total Work Days: " + workTime + "<p>Work Done: " + workDone +"%";
       result.add(createHtmlPage(Integer.toString(current.getId()), current.getName(), info));
     }
-    //--------------------\\
-    result.add(createHtmlPage(" ", "Project info", "Informação geral sobre o projeto,"));
+
     return result;
-  }
-
-  private static ListItem createSummaryPage() {
-    JPanel result = new JPanel(new BorderLayout());
-    Box htmlBox = Box.createVerticalBox();
-    {
-      JEditorPane html = createHtml(GanttLanguage.getInstance().formatText("about.summary", GPVersion.CURRENT));
-      html.setAlignmentX(0.5f);
-      htmlBox.add(html);
-      htmlBox.add(Box.createVerticalStrut(20));
-    }
-    {
-      JEditorPane html = createHtml(GanttLanguage.getInstance().formatText("about.authors.short", "http://ganttproject.biz/about"));
-      html.setAlignmentX(0.5f);
-      htmlBox.add(html);
-      htmlBox.add(Box.createVerticalStrut(20));
-    }
-    result.add(htmlBox, BorderLayout.NORTH);
-
-    JLabel icon = new JLabel(new ImageIcon(InfoDialog2.class.getResource("/icons/ganttproject.png")));
-    icon.setAlignmentX(0.5f);
-    JPanel iconWrapper = new JPanel(new BorderLayout());
-    iconWrapper.add(icon, BorderLayout.NORTH);
-    result.add(iconWrapper, BorderLayout.CENTER);
-
-    result.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
-    return new ListItem(false, "summary", i18n("summary"), result);
-  }
-
-  private static ListItem createTranslationsPage() {
-    StringBuilder builder = new StringBuilder();
-    for (Locale l : GanttLanguage.getInstance().getAvailableLocales()) {
-      String language = GanttLanguage.getInstance().formatLanguageAndCountry(l);
-      String translatorsKey = "about.translations."
-          + (Strings.isNullOrEmpty(l.getCountry()) ? l.getLanguage() : l.getLanguage() + "_" + l.getCountry());
-      String translators = GanttLanguage.getInstance().getText(translatorsKey);
-      if (translators == null) {
-        continue;
-      }
-      builder.append(GanttLanguage.getInstance().formatText("about.translations.entry", language, translators));
-    }
-    return createHtmlPage("translations", i18n("translations"), GanttLanguage.getInstance().formatText("about.translations", builder.toString()));
-  }
-
-  private static ListItem createHtmlPage(String key) {
-    return createHtmlPage(key, i18n(key), i18n("about." + key));
   }
 
   private static ListItem createHtmlPage(String key, String title, String body) {
@@ -164,10 +126,6 @@ public class InfoDialog2 extends AbstractPagesDialog {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     htmlPane.setSize(new Dimension(screenSize.width / 3, Integer.MAX_VALUE));
     return htmlPane;
-  }
-
-  private static String i18n(String key) {
-    return GanttLanguage.getInstance().getText(key);
   }
 
   @Override

@@ -47,6 +47,9 @@ import net.sourceforge.ganttproject.gui.options.TopPanel;
 import net.sourceforge.ganttproject.language.GanttLanguage;
 import net.sourceforge.ganttproject.resource.HumanResourceManager;
 import net.sourceforge.ganttproject.resource.HumanResource;
+import net.sourceforge.ganttproject.task.ResourceAssignment;
+import net.sourceforge.ganttproject.task.Task;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -75,12 +78,19 @@ public class InfoDialog2 extends AbstractPagesDialog {
 
     while(it.hasNext()) {
       current = it.next();
-      String info = "Name: " + current.getName() + "<p>" + "Phone: " + current.getPhone() + "<p>" + "Mail: " + current.getMail();
+      ResourceAssignment[] resourceAssignemnts = current.getAssignments();
+      float workTime = 0;
+      for(int i=0; i<resourceAssignemnts.length; i++) {
+        workTime += resourceAssignemnts[i].getLoad(); //Isto só dá a percentagem por task. Precisamos de multiplicar pela duração da task
+                                                      //para dar a duração certa por recurso
+                                                      //Usar classes HumanResource, ResourceAssignemt, Task (paths nos imports)
+      }
+      String info = "Name: " + current.getName() + "<p>Phone: " + current.getPhone() + "<p>Mail: " + current.getMail() +
+              "<p>Test: " + Float.toString(workTime);
       result.add(createHtmlPage(Integer.toString(current.getId()), current.getName(), info));
     }
     //--------------------\\
-
-    //result.add(createHtmlPage("1", "Resources1", IDs));
+    result.add(createHtmlPage(" ", "Project info", "Informação geral sobre o projeto,"));
     return result;
   }
 

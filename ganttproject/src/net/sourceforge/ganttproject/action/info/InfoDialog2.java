@@ -93,7 +93,10 @@ public class InfoDialog2 extends AbstractPagesDialog {
         //para dar a duração certa por recurso
         //Usar classes HumanResource, ResourceAssignment, Task (paths nos imports)
       }
-      workDone /= resourceAssignments.length;
+
+      if(resourceAssignments.length>0) {
+        workDone /= resourceAssignments.length;
+      }
       String info = "Name: " + current.getName() +
               "<p>Total Work Days: " + workTime + "<p>Work Done: " + workDone +"%";
       result.add(createHtmlPage(Integer.toString(current.getId()), current.getName(), info));

@@ -41,6 +41,7 @@ import net.sourceforge.ganttproject.gui.UIFacade;
 import net.sourceforge.ganttproject.gui.UIUtil;
 import net.sourceforge.ganttproject.action.info.InfoDialog2;
 import net.sourceforge.ganttproject.language.GanttLanguage;
+import net.sourceforge.ganttproject.task.TaskManager;
 
 import net.sourceforge.ganttproject.resource.HumanResourceManager;
 import net.sourceforge.ganttproject.resource.HumanResource;
@@ -58,9 +59,13 @@ public class InfoResourcesMenu {
     private final AboutAction myAboutAction;
     private static HumanResourceManager myRm;
 
-    public InfoResourcesMenu(IGanttProject project, UIFacade uiFacade, ProjectUIFacade projectUiFacade, HumanResourceManager rm) {
+    private static TaskManager myTm;
+
+    public InfoResourcesMenu(IGanttProject project, UIFacade uiFacade, ProjectUIFacade projectUiFacade, HumanResourceManager rm,
+                             TaskManager tm) {
         myAboutAction = new AboutAction(uiFacade);
         myRm = rm;
+        myTm = tm;
     }
 
     public JMenu createMenu() {
@@ -79,7 +84,7 @@ public class InfoResourcesMenu {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            InfoDialog2 agp = new InfoDialog2(myUiFacade, myRm);
+            InfoDialog2 agp = new InfoDialog2(myUiFacade, myRm, myTm);
             agp.show();
         }
     }

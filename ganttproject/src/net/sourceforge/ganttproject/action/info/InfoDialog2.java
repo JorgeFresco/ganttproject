@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -48,6 +51,7 @@ import net.sourceforge.ganttproject.language.GanttLanguage;
 import net.sourceforge.ganttproject.resource.HumanResourceManager;
 import net.sourceforge.ganttproject.resource.HumanResource;
 import net.sourceforge.ganttproject.task.ResourceAssignment;
+import net.sourceforge.ganttproject.task.TaskManager;
 import net.sourceforge.ganttproject.task.Task;
 
 import java.util.ArrayList;
@@ -60,22 +64,51 @@ public class InfoDialog2 extends AbstractPagesDialog {
 
   //private HumanResourceManager myRm;
 
-  public InfoDialog2(UIFacade uiFacade, HumanResourceManager rm) {
+  public InfoDialog2(UIFacade uiFacade, HumanResourceManager rm, TaskManager tm) {
 
-    super("resourcesInfo", uiFacade, createPages(rm));
-    //myRm = rm;
+    super("resourcesInfo", uiFacade, createPages(rm,tm));
   }
 
 
-  private static List<ListItem> createPages(HumanResourceManager rm) {
+  private static List<ListItem> createPages(HumanResourceManager rm, TaskManager tm) {
 
     List<ListItem> result = new ArrayList<AbstractPagesDialog.ListItem>();
+
+    //--Total tasks values--\\
+    //DATES
+    //start
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(tm.getProjectStart());
+    int start_year = cal.get(Calendar.YEAR);
+    int start_month = cal.get(Calendar.MONTH) + 1;
+    int start_day = cal.get(Calendar.DAY_OF_MONTH);
+    //end
+    cal.setTime(tm.getProjectEnd());
+    int end_year = cal.get(Calendar.YEAR);
+    int end_month = cal.get(Calendar.MONTH) + 1;
+    int end_day = cal.get(Calendar.DAY_OF_MONTH);
+
+    String startDate = Integer.toString(start_day) + "/" + Integer.toString(start_month) + "/" + Integer.toString(start_year);
+    String endDate = Integer.toString(end_day) + "/" + Integer.toString(end_month) + "/" + Integer.toString(end_year);
+
+    Task[] tasks = tm.getTasks();
+    int nOfCompletedTasks = 0;
+    for(int i=0; i< tasks.length; i++) {
+      if(tasks[i].getCompletionPercentage() == 100){
+        nOfCompletedTasks ++;
+      }
+    }
+
+    String totalTasksInfo = "Start date: " + startDate + "<p>End date: " + endDate
+            + "<p>Number of completed tasks/Total number of tasks: " + nOfCompletedTasks + "/" + tasks.length;
+
+    result.add(createHtmlPage(" ", "Project info", totalTasksInfo));
+
 
     //--Resources values--\\
     List<HumanResource> resources = rm.getResources();
     Iterator<HumanResource> it = resources.iterator();
     HumanResource current;
-    result.add(createHtmlPage(" ", "Project info", "Informação geral sobre o projeto."));
     while(it.hasNext()) {
       current = it.next();
       ResourceAssignment[] resourceAssignments = current.getAssignments();

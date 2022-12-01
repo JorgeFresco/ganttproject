@@ -135,7 +135,7 @@ public class GanttProject extends GanttProjectBase implements ResourceView, Gant
 
   private final EditMenu myEditMenu;
 
-  //private final InfoResourcesMenu viewInfo;
+  private final InfoResourcesMenu myInfoMenu;
 
   private final ProjectMenu myProjectMenu;
 
@@ -327,10 +327,8 @@ public class GanttProject extends GanttProjectBase implements ResourceView, Gant
     myEditMenu = new EditMenu(getProject(), getUIFacade(), getViewManager(), getSearchUi(), "edit");
     bar.add(myEditMenu);
 
-    /*viewInfo = new InfoMenu(getProject(), getUIFacade(), getViewManager(), getSearchUi(), getHumanResourceManager(), "projectInfo");
-    bar.add(viewInfo);*/
-    InfoResourcesMenu infoMenu = new InfoResourcesMenu(getProject(), getUIFacade(), getProjectUIFacade(), getHumanResourceManager());
-    bar.add(infoMenu.createMenu());
+    myInfoMenu = new InfoResourcesMenu(getProject(), getUIFacade(), getProjectUIFacade(), getHumanResourceManager(), getTaskManager());
+    bar.add(myInfoMenu.createMenu());
 
     ViewMenu viewMenu = new ViewMenu(getProject(), getViewManager(), getUiFacadeImpl().getDpiOption(), getUiFacadeImpl().getChartFontOption(), "view");
     bar.add(viewMenu);

@@ -27,9 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -72,24 +72,16 @@ public class InfoDialog2 extends AbstractPagesDialog {
 
   private static List<ListItem> createPages(HumanResourceManager rm, TaskManager tm) {
 
+    GanttLanguage language = GanttLanguage.getInstance();
+
     List<ListItem> result = new ArrayList<AbstractPagesDialog.ListItem>();
 
     //--Total tasks values--\\
-    //DATES
-    //start
-    Calendar cal = Calendar.getInstance();
-    cal.setTime(tm.getProjectStart());
-    int start_year = cal.get(Calendar.YEAR);
-    int start_month = cal.get(Calendar.MONTH) + 1;
-    int start_day = cal.get(Calendar.DAY_OF_MONTH);
-    //end
-    cal.setTime(tm.getProjectEnd());
-    int end_year = cal.get(Calendar.YEAR);
-    int end_month = cal.get(Calendar.MONTH) + 1;
-    int end_day = cal.get(Calendar.DAY_OF_MONTH);
-
-    String startDate = Integer.toString(start_day) + "/" + Integer.toString(start_month) + "/" + Integer.toString(start_year);
-    String endDate = Integer.toString(end_day) + "/" + Integer.toString(end_month) + "/" + Integer.toString(end_year);
+    SimpleDateFormat formatter = new SimpleDateFormat(language.getText("dateFormat"));
+    Date date = new Date();
+    String startDate = formatter.format(tm.getProjectStart()).toString();
+    String endDate = formatter.format(tm.getProjectEnd()).toString();
+    System.out.println(formatter.format(date));
 
     Task[] tasks = tm.getTasks();
     int nOfCompletedTasks = 0;
@@ -99,10 +91,9 @@ public class InfoDialog2 extends AbstractPagesDialog {
       }
     }
 
-    String totalTasksInfo = "Start date: " + startDate + "<p>End date: " + endDate
-            + "<p>Number of completed tasks/Total number of tasks: " + nOfCompletedTasks + "/" + tasks.length;
+    String totalTasksInfo = language.formatText("totalTasksInfo", startDate, endDate,nOfCompletedTasks,tasks.length);
 
-    result.add(createHtmlPage(" ", "Project info", totalTasksInfo));
+    result.add(createHtmlPage(" ", language.getText("totalProjectInfo"), totalTasksInfo));
 
 
     //--Resources values--\\
@@ -117,21 +108,16 @@ public class InfoDialog2 extends AbstractPagesDialog {
       float a;
       Task task;
       for (ResourceAssignment resourceAssignment : resourceAssignments) {
-        a = resourceAssignment.getLoad();
         task = resourceAssignment.getTask();
         workTime += task.getDuration().getLength();
-        workDone += task.getCompletionPercentage(); // o que é o getLoad exatamente
+        workDone += task.getCompletionPercentage();
 
-        //Isto só dá a percentagem por task. Precisamos de multiplicar pela duração da task
-        //para dar a duração certa por recurso
-        //Usar classes HumanResource, ResourceAssignment, Task (paths nos imports)
       }
 
       if(resourceAssignments.length>0) {
         workDone /= resourceAssignments.length;
       }
-      String info = "Name: " + current.getName() +
-              "<p>Total Work Days: " + workTime + "<p>Work Done: " + workDone +"%";
+      String info =  language.formatText("resourceInfo", current.getName(), workTime, workDone);
       result.add(createHtmlPage(Integer.toString(current.getId()), current.getName(), info));
     }
 

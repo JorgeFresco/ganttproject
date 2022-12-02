@@ -118,7 +118,8 @@ public class InfoDialog2 extends AbstractPagesDialog {
         workDone /= resourceAssignments.length;
       }
       String info =  language.formatText("resourceInfo", current.getName(), workTime, workDone);
-      result.add(createHtmlPage(Integer.toString(current.getId()), current.getName(), info));
+      String resourceInfo = current.getName() + " ("+current.getId()+")";
+      result.add(createHtmlPage(Integer.toString(current.getId()), resourceInfo, info));
     }
 
     return result;

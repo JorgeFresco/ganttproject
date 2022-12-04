@@ -66,7 +66,7 @@ public class InfoDialog2 extends AbstractPagesDialog {
 
   public InfoDialog2(UIFacade uiFacade, HumanResourceManager rm, TaskManager tm) {
 
-    super("resourcesInfo", uiFacade, createPages(rm,tm));
+    super("infoTitle", uiFacade, createPages(rm,tm));
   }
 
 
@@ -103,21 +103,23 @@ public class InfoDialog2 extends AbstractPagesDialog {
     while(it.hasNext()) {
       current = it.next();
       ResourceAssignment[] resourceAssignments = current.getAssignments();
-      int workTime = 0;
+      int tasksDone = 0;
       int workDone = 0;
       float a;
       Task task;
       for (ResourceAssignment resourceAssignment : resourceAssignments) {
         task = resourceAssignment.getTask();
-        workTime += task.getDuration().getLength();
         workDone += task.getCompletionPercentage();
+        if(task.getCompletionPercentage() == 100){
+          tasksDone++;
+        }
 
       }
 
       if(resourceAssignments.length>0) {
         workDone /= resourceAssignments.length;
       }
-      String info =  language.formatText("resourceInfo", current.getName(), workTime, workDone);
+      String info =  language.formatText("resourceInfo", current.getName(), tasksDone, resourceAssignments.length, workDone);
       String resourceInfo = current.getName() + " ("+current.getId()+")";
       result.add(createHtmlPage(Integer.toString(current.getId()), resourceInfo, info));
     }
